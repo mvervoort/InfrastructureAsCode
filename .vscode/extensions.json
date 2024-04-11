@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-vscode.powershell",
+        "hashicorp.terraform",
+        "ms-dotnettools.dotnet-interactive-vscode",
+        "ms-azuretools.vscode-bicep"
+    ]
+}

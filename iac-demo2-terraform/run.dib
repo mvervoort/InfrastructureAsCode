@@ -1,0 +1,40 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"pwsh","items":[{"aliases":[],"languageName":"pwsh","name":"pwsh"}]}}
+
+#!markdown
+
+**Prepare / init**
+
+#!pwsh
+
+terraform init
+
+#!markdown
+
+**Plan (what-if)**
+
+#!pwsh
+
+terraform plan --out=output.tfplan
+
+#!markdown
+
+**Deploy**
+
+#!pwsh
+
+terraform apply output.tfplan
+
+#!markdown
+
+---
+**Cleanup (delete)**
+
+#!pwsh
+
+terraform plan -destroy --out=destroy.tfplan
+
+#!pwsh
+
+terraform apply destroy.tfplan

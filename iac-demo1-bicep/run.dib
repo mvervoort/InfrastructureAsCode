@@ -1,0 +1,38 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"pwsh","items":[{"aliases":[],"languageName":"pwsh","name":"pwsh"}]}}
+
+#!markdown
+
+**Prepare / init**
+
+#!pwsh
+
+az account set --subscription "Visual Studio Premium met MSDN"
+az group create --name "iac-demo1-bicep-rg" --location westeurope
+
+#!markdown
+
+**Plan (what-if)**
+
+#!pwsh
+
+az deployment group what-if --resource-group "iac-demo1-bicep-rg" --template-file "main.bicep"
+
+#!markdown
+
+**Deploy**
+
+#!pwsh
+
+az deployment group create --resource-group "iac-demo1-bicep-rg" --template-file "main.bicep"  --query properties.outputs
+
+#!markdown
+
+---
+
+**Cleanup (delete)**
+
+#!pwsh
+
+az group delete --name "iac-demo1-bicep-rg" --yes

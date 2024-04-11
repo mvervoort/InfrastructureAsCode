@@ -1,0 +1,31 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+**Plan (what-if)**
+
+#!pwsh
+
+pulumi preview
+
+#!markdown
+
+**Plan (what-if)**
+
+The `--skip-preview` and `--yes` are required because PowerShell Notebook does not support user input. Feel free to use the commands in a local PowerShell terminal interactively.
+
+#!pwsh
+
+pulumi up --skip-preview --yes
+
+#!markdown
+
+---
+
+**Cleanup (delete)**
+
+#!pwsh
+
+pulumi destroy --skip-preview --yes
