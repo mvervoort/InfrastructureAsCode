@@ -11,6 +11,12 @@ The demo's are targeting are used to deploy:
 - Azure App Service Plan
 - Azure App Service (with random name)
 
+All the demo's will show the basic concept of IaC including:
+
+- Idempotent deployments
+- CI/CD using GitHub actions (TODO)
+- DTAP environments (TODO)
+
 ## PowerShell Notebook (optional)
 
 Many of the demo's using a PowerShell Notebook for easy demonstration.
@@ -35,9 +41,9 @@ To install PowerShell Notebooks:
 
 - Clone the repo to your local machine
 - Browse to the README.md of any of the examples:
-  - [iac-demo1-bicep](iac-demo1-bicep\README.md)
-  - [iac-demo2-terraform](iac-demo2-terraform\README.md)
-  - [iac-demo3-pulumi](iac-demo3-pulumi\README.md)
+  - [iac-demo1-bicep](iac-demo1-bicep/README.md)
+  - [iac-demo2-terraform](iac-demo2-terraform/README.md)
+  - [iac-demo3-pulumi](iac-demo3-pulumi/README.md)
 
 ## TODO
 

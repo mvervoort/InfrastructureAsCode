@@ -6,7 +6,7 @@ Terraform will be used to deploy:
 
 - Azure Resource Group
 - Azure App Service Plan
-- Azure App Service (with random name)
+- Azure App Service (with pseude-random name)
 
 # Prerequisites
 

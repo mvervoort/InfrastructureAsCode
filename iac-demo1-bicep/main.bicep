@@ -7,7 +7,7 @@ param linuxFxVersion string = 'DOTNETCORE|8.0'
 
 // Calculated variables
 var kindOfRandom = substring(uniqueString(resourceGroup().id), 0, 4)
-var webAppNameResult = replace(webAppName, '<kindOfRandom>', kindOfRandom)
+var webAppNameCalculated = replace(webAppName, '<kindOfRandom>', kindOfRandom)
 
 // App Service Plan
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
@@ -24,7 +24,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
 
 // Web App
 resource appService 'Microsoft.Web/sites@2020-06-01' = {
-  name: webAppNameResult
+  name: webAppNameCalculated
   location: location
   properties: {
     serverFarmId: appServicePlan.id
