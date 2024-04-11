@@ -33,7 +33,7 @@ class AppServiceStack : Stack
             },
         });
 
-        //Console.WriteLine("THIS IS A TEST!!!");
+        //Console.WriteLine("Test message to see in the pulumi output.");
 
         var random = new Random.RandomString("random", new()
         {

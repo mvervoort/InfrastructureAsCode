@@ -17,7 +17,7 @@ Terraform will be used to deploy:
 
 ## Using PowerShell Notebook:
 
-Open file [playground.dib](playground.dib), and hit the run button in the 'terraform init', 'terraform plan' and 'terraform apply' cell.
+Open file [run.dib](run.dib), and hit the run button in the 'terraform init', 'terraform plan' and 'terraform apply' cell.
 
 ## Manual:
 
