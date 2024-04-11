@@ -1,4 +1,4 @@
 config:
   azure-native:location: WestEurope
-  sku: B1
-  dotnet_version: "7.0"
+  sku: B2
+  dotnet_version: "6.0"

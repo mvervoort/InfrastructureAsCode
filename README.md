@@ -13,9 +13,10 @@ The demo's are targeting are used to deploy:
 
 All the demo's will show the basic concept of IaC including:
 
-- Idempotent deployments
+- Idempotent deployments (multiple runs will not create new but update existing resources)
 - CI/CD using GitHub actions (TODO)
-- DTAP environments (TODO)
+- DTAP environments (dev, test, acceptance, production)
+- Return output parameter (URL of App Service)
 
 ## PowerShell Notebook (optional)
 
@@ -48,4 +49,3 @@ To install PowerShell Notebooks:
 ## TODO
 
 - Add GitHub actions
-- Add DTAP

@@ -16,11 +16,11 @@ terraform init
 
 #!pwsh
 
-terraform plan --out=output.tfplan
+terraform plan -var-file "parameters.dev.tfvars" --out=output.tfplan
 
 #!markdown
 
-**Deploy**
+**Deploy (apply)**
 
 #!pwsh
 
@@ -33,7 +33,7 @@ terraform apply output.tfplan
 
 #!pwsh
 
-terraform plan -destroy --out=destroy.tfplan
+terraform plan -destroy -var-file "parameters.dev.tfvars" --out=destroy.tfplan
 
 #!pwsh
 

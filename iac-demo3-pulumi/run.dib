@@ -1,6 +1,16 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+{"kernelInfo":{"defaultKernelName":"pwsh","items":[{"aliases":[],"languageName":"pwsh","name":"pwsh"}]}}
+
+#!markdown
+
+**Prepare / init**
+
+#!pwsh
+
+$Environment = 'test'
+pulumi stack select $Environment --create
+pulumi stack
 
 #!markdown
 
@@ -12,7 +22,7 @@ pulumi preview
 
 #!markdown
 
-**Plan (what-if)**
+**Deploy (up)**
 
 The `--skip-preview` and `--yes` are required because PowerShell Notebook does not support user input. Feel free to use the commands in a local PowerShell terminal interactively.
 

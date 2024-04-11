@@ -26,9 +26,9 @@ Open a terminal windows (shell/powershell/console) and execute the following com
 - Prepare/init:
   - `terraform init`
 - Plan (what-if):
-  - `terraform plan --out=output.tfplan`
+  - `terraform plan -var-file "parameters.dev.tfvars" --out=output.tfplan`
 - Deploy:
   - `terraform apply output.tfplan`
 - Cleanup (delete):
-  - `terraform plan -destroy --out=destroy.tfplan`
+  - `terraform plan -destroy -var-file "parameters.dev.tfvars" --out=destroy.tfplan`
   - `terraform apply destroy.tfplan`

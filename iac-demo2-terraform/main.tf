@@ -1,17 +1,46 @@
+# Input Variables
+variable "environment" {
+  type    = string
+}
+
+variable "baseName" {
+  type    = string
+  default = "iac-demo2-terraform"
+}
+
+variable "location" {
+  type    = string
+  default = "westeurope"
+}
+
+variable "sku" {
+  type    = string
+  default = "B1"
+}
+
+variable "dotnet_version" {
+  type    = string
+  default = "8.0"
+}
+
+locals {
+  resource_group_name = "${var.baseName}-${var.environment}-rg"
+}
+
 # Resource Group
 resource "azurerm_resource_group" "this" {
-  name     = "iac-demo2-terraform-rg"
-  location = "westeurope"
+  name     = local.resource_group_name
+  location = var.location
 }
 
 
 # App Service Plan
 resource "azurerm_service_plan" "this" {
-  name                = "iac-demo2-terraform-plan"
+  name                = "${var.baseName}-${var.environment}-plan"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   os_type             = "Linux"
-  sku_name            = "B1"
+  sku_name            = var.sku
 }
 
 # Random String
@@ -22,14 +51,10 @@ resource "random_string" "this" {
 
 # Web App
 resource "azurerm_linux_web_app" "webapp" {
-  name                = "iac-demo2-terraform-${random_string.this.id}-webapp"
+  name                = "${var.baseName}-${var.environment}-${random_string.this.id}-webapp"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   service_plan_id     = azurerm_service_plan.this.id
-
-  identity {
-    type = "SystemAssigned"
-  }
 
   site_config {
     always_on = false

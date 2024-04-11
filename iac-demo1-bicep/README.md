@@ -25,10 +25,10 @@ Open a terminal windows (shell/powershell/console) and execute the following com
 
 - Prepare/init:
   - `az account set --subscription "Visual Studio Premium met MSDN"`
-  - `az group create --name "iac-demo1-bicep-rg" --location westeurope`
+  - `az group create --name "iac-demo1-bicep-dev-rg" --location westeurope`
 - Plan (what-if):
-  - `az deployment group what-if --resource-group "iac-demo1-bicep-rg" --template-file "main.bicep"`
+  - `az deployment group what-if --resource-group "iac-demo1-bicep-dev-rg" --template-file "main.bicep" --parameters "parameters.$Environment.bicepparam"`
 - Deploy:
-  - `az deployment group create --resource-group "iac-demo1-bicep-rg" --template-file "main.bicep"  --query properties.outputs`
+  - `az deployment group create --resource-group "iac-demo1-bicep-dev-rg" --template-file "main.bicep"  --parameters "parameters.$Environment.bicepparam" --query properties.outputs`
 - Cleanup (delete):
-  - `az group delete --name "iac-demo1-bicep-rg" --yes`
+  - `az group delete --name "iac-demo1-bicep-dev-rg" --yes`
