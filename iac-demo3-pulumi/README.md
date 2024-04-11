@@ -13,8 +13,10 @@ Terraform will be used to deploy:
 - Pulumi installed  
   - https://www.pulumi.com/docs/install/
   - or `choco install pulumi`
-- Pulumi account  
-  
+- Pulumi account
+  - Create a Pulumi account at https://app.pulumi.com/
+  - Run `pulumi login`. Hit [Enter] to login using browser.
+    
 # Getting started
 
 ## Using PowerShell Notebook:

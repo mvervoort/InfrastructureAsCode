@@ -8,8 +8,10 @@
 
 #!pwsh
 
+$Environment = "dev"
+$ResourceGroup = "iac-demo1-bicep-$Environment-rg"
 az account set --subscription "Visual Studio Premium met MSDN"
-az group create --name "iac-demo1-bicep-rg" --location westeurope
+az group create --name $ResourceGroup --location westeurope
 
 #!markdown
 
@@ -17,7 +19,7 @@ az group create --name "iac-demo1-bicep-rg" --location westeurope
 
 #!pwsh
 
-az deployment group what-if --resource-group "iac-demo1-bicep-rg" --template-file "main.bicep" --parameters "parameters.dev.bicepparam"
+az deployment group what-if --resource-group $ResourceGroup --template-file "main.bicep" --parameters "parameters.$Environment.bicepparam"
 
 #!markdown
 
@@ -25,7 +27,7 @@ az deployment group what-if --resource-group "iac-demo1-bicep-rg" --template-fil
 
 #!pwsh
 
-az deployment group create --resource-group "iac-demo1-bicep-rg" --template-file "main.bicep"  --parameters "parameters.dev.bicepparam" --query properties.outputs
+az deployment group create --resource-group $ResourceGroup --template-file "main.bicep"  --parameters "parameters.$Environment.bicepparam" --query properties.outputs
 
 #!markdown
 
@@ -35,4 +37,4 @@ az deployment group create --resource-group "iac-demo1-bicep-rg" --template-file
 
 #!pwsh
 
-az group delete --name "iac-demo1-bicep-rg" --yes
+az group delete --name $ResourceGroup --yes

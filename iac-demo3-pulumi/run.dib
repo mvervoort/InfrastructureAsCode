@@ -8,7 +8,7 @@
 
 #!pwsh
 
-$Environment = 'dev'
+$Environment = 'test'
 pulumi stack select $Environment --create
 pulumi stack
 
