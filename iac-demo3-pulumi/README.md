@@ -27,6 +27,8 @@ Open file [run.dib](run.dib), and hit the run button in the 'pulumi preview' and
 
 Open a terminal windows (shell/powershell/console) and execute the following commands:
 
+- Prepare/init:
+  - `pulumi stack select dev --create`
 - Plan (what-if):
   - `pulumi preview`
 - Deploy:
