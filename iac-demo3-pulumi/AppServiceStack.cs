@@ -16,26 +16,40 @@ class AppServiceStack : Stack
 {
     public AppServiceStack()
     {
+        // Get the name of the current stack. E.g. 'dev', 'test', 'prod'.
+        var stack = Pulumi.Deployment.Instance.StackName;
+
+        // Get the configuration settings for the current stack.
+        var config = new Pulumi.Config();
+        var sku = config.Get("sku") ?? "B1";
+        var dotnet_version = config.Get("dotnet_version") ?? "8.0";
+
+        // Calculated variables
+        var baseNameWithEnvironment = $"iac-demo3-pulumi-{stack}";
+
+        // Create an Azure Resource Group
         var resourceGroup = new ResourceGroup("rg", new ResourceGroupArgs
         {
-            ResourceGroupName = "iac-demo3-pulumi-rg",
+            ResourceGroupName = $"{baseNameWithEnvironment}-rg",
         });
 
+        // Create an App Service Plan
         var appServicePlan = new AppServicePlan("asp", new AppServicePlanArgs
         {
-            Name = "iac-demo3-pulumi-plan",
+            Name = $"{baseNameWithEnvironment}-plan",
             ResourceGroupName = resourceGroup.Name,
-            Kind = "App",
+            Kind = "Linux",
+            Reserved = true,
             Sku = new SkuDescriptionArgs
             {
                 Tier = "Basic",
-                Name = "B1",
+                Name = sku,
             },
         });
 
-        //Console.WriteLine("Test message to see in the pulumi output.");
 
-        var random = new Random.RandomString("random", new()
+        // Create a Linux App Service
+        var random = new Random.RandomString("random", new Random.RandomStringArgs()
         {
             Length = 4,
             Special = false,
@@ -43,13 +57,19 @@ class AppServiceStack : Stack
             Lower = true,
         });
 
-        var appName = random.Result.Apply(rnd => $"iac-demo3-pulumi-{rnd}-webapp");
-
+        var appName = random.Result.Apply(rnd => $"{baseNameWithEnvironment}-{rnd}-webapp");
+        
         var app = new WebApp("app", new WebAppArgs
         {
             Name = appName,
             ResourceGroupName = resourceGroup.Name,
             ServerFarmId = appServicePlan.Id,
+            SiteConfig = new SiteConfigArgs
+            {
+                AlwaysOn = true,
+                LinuxFxVersion = $"DOTNETCORE:{dotnet_version}",
+            },
+
         });
 
         this.Endpoint = app.DefaultHostName;
