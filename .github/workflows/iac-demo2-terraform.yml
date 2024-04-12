@@ -1,0 +1,127 @@
+name: iac-demo2-terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        default: 'test'
+
+jobs:
+  terraform-plan-apply:
+    env:
+      TF_STATE_RESOURCE_GROUP: "iac-demo2-terraform-state-rg"
+      TF_STATE_STORAGE_ACCOUNT_NAME: "iacdemo2terraformstate"
+      TF_STATE_CONTAINER_NAME: "state-files"
+      #this is needed since we are running terraform with read-only permissions
+      ARM_SKIP_PROVIDER_REGISTRATION: true
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@main
+
+    - name: Log into Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Prepare Terraform state Storage Account
+      uses: Azure/cli@v2.0.0
+      with:
+        inlineScript: |
+          #!/bin/bash
+          echo "Creating Resource Group"	
+          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
+          az group create --name "${{ env.TF_STATE_RESOURCE_GROUP }}" --location westeurope
+          echo "Creating Storage Account and container"
+          az storage account create --name ${{ env.TF_STATE_STORAGE_ACCOUNT_NAME }} --resource-group "${{ env.TF_STATE_RESOURCE_GROUP }}" --location westeurope --sku Standard_LRS
+          az storage container create --name ${{ env.TF_STATE_CONTAINER_NAME }} --account-name ${{ env.TF_STATE_STORAGE_ACCOUNT_NAME }}
+          echo "Fetch access key"
+          ACCOUNT_KEY=$(az storage account keys list --resource-group "${{ env.TF_STATE_RESOURCE_GROUP }}" --account-name ${{ env.TF_STATE_STORAGE_ACCOUNT_NAME }} --query '[0].value' -o tsv)
+          export ARM_ACCESS_KEY=$ACCOUNT_KEY
+
+          echo "Extract details from AZURE_CREDENTIALS secret"
+          read -r -d '' AZURE_CREDENTIALS << END_OF_JSON
+          ${{ secrets.AZURE_CREDENTIALS }}
+          END_OF_JSON
+
+          # echo "$AZURE_CREDENTIALS"
+
+          ARM_CLIENT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.clientId')
+          ARM_CLIENT_SECRET=$(echo "$AZURE_CREDENTIALS" | jq -r '.clientSecret')
+          ARM_TENANT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.tenantId')
+          ARM_SUBSCRIPTION_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.subscriptionId')
+
+          echo "ARM_CLIENT_ID: $ARM_CLIENT_ID"
+          echo "ARM_CLIENT_SECRET: $ARM_CLIENT_SECRET"
+          echo "ARM_TENANT_ID: $ARM_TENANT_ID"
+          echo "ARM_SUBSCRIPTION_ID: $ARM_SUBSCRIPTION_ID"
+
+
+    # Install the latest version of the Terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_wrapper: false
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    # Will fail the build if not
+    - name: Terraform Format
+      run: terraform fmt -check
+
+    # Generates an execution plan for Terraform
+    # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
+    - name: Terraform Plan
+      id: tf-plan
+      run: |
+        export exitcode=0
+        terraform plan -detailed-exitcode -no-color -var-file "parameters.${{ github.event.inputs.environment }}.tfvars" --out=output.tfplan || export exitcode=$?
+
+        echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+        
+        if [ $exitcode -eq 1 ]; then
+          echo Terraform Plan Failed!
+          exit 1
+        else 
+          exit 0
+        fi
+        
+    # Save plan to artifacts  
+    - name: Publish Terraform Plan
+      uses: actions/upload-artifact@v4
+      with:
+        name: tfplan
+        path: output.tfplan
+        
+    # Create string output of Terraform Plan
+    - name: Create String Output
+      id: tf-plan-string
+      run: |
+        TERRAFORM_PLAN=$(terraform show -no-color output.tfplan)
+        
+        delimiter="$(openssl rand -hex 8)"
+        echo "summary<<${delimiter}" >> $GITHUB_OUTPUT
+        echo "## Terraform Plan Output" >> $GITHUB_OUTPUT
+        echo "<details><summary>Click to expand</summary>" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo '```terraform' >> $GITHUB_OUTPUT
+        echo "$TERRAFORM_PLAN" >> $GITHUB_OUTPUT
+        echo '```' >> $GITHUB_OUTPUT
+        echo "</details>" >> $GITHUB_OUTPUT
+        echo "${delimiter}" >> $GITHUB_OUTPUT
+        
+    # Publish Terraform Plan as task summary
+    - name: Publish Terraform Plan to Task Summary
+      env:
+        SUMMARY: ${{ steps.tf-plan-string.outputs.summary }}
+      run: |
+        echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+
+    # Terraform Apply
+    - name: Terraform Apply
+      run: terraform apply -auto-approve output.tfplan
