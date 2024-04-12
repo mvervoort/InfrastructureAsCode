@@ -10,6 +10,8 @@ on:
 jobs:
   deploy-to-azure:
     runs-on: ubuntu-latest
+    env:
+      ResourceGroupName: "iac-demo1-bicep-${{ github.event.inputs.environment }}-rg"
     steps:
 
     - name: Checkout code
@@ -24,14 +26,15 @@ jobs:
       uses: Azure/cli@v2.0.0
       with:
         inlineScript: |
+          #!/bin/bash
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
-          az group create --name "iac-demo1-bicep-${{ github.event.inputs.environment }}-rg" --location westeurope
+          az group create --name "${{ env.ResourceGroupName }}" --location westeurope
               
     - name: Deploy Bicep file
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: "ac-demo1-bicep-${{ github.event.inputs.environment }}-rg"
+        resourceGroupName: "${{ env.ResourceGroupName }}"
         template: ./iac-demo1-bicep/main.bicep
         parameters: ./iac-demo1-bicep/parameters.test.bicepparam
         failOnStdErr: false

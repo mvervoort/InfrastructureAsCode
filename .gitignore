@@ -404,3 +404,4 @@ FodyWeavers.xsd
 *.backup
 .terraform.lock.hcl
 
+.github/secrets/*
