@@ -54,7 +54,7 @@ Next to running this demo manual from your local machine, it's also possible to 
      }
      ```
   3. Create secret `AZURE_SUBSCRIPTION` with the subscription ID.
-5. Setup an action pipeline for [.github\workflows\iac-demo1-bicep.yml](.github\workflows\iac-demo1-bicep.yml)
+5. Setup an action pipeline for [.github/workflows/iac-demo1-bicep.yml](/.github/workflows/iac-demo1-bicep.yml)
 6. Run this pipeline
 
 > Notice the WebApp URL in task 'Show Bicep output'
