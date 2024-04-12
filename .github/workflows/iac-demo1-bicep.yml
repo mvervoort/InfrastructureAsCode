@@ -41,5 +41,5 @@ jobs:
         failOnStdErr: false
 
     - run: |
-        echo "Web App URL: ${{ steps.deploy_bicep.outputs.webAppUrl }}"
+        echo "Web App URL: https://${{ steps.deploy_bicep.outputs.webAppUrl }}"
       name: Show Bicep output
