@@ -32,9 +32,14 @@ jobs:
               
     - name: Deploy Bicep file
       uses: azure/arm-deploy@v1
+      id: deploy_bicep
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: "${{ env.ResourceGroupName }}"
         template: ./iac-demo1-bicep/main.bicep
         parameters: ./iac-demo1-bicep/parameters.test.bicepparam
         failOnStdErr: false
+
+    - run: |
+        echo "Web App URL: ${{ steps.deploy_bicep.outputs.webAppUrl }}"
+      name: Show Bicep output
