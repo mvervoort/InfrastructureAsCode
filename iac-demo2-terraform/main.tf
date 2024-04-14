@@ -41,6 +41,7 @@ resource "azurerm_service_plan" "this" {
   resource_group_name = azurerm_resource_group.this.name
   os_type             = "Linux"
   sku_name            = var.sku
+  worker_count        = 1
 }
 
 # Random String

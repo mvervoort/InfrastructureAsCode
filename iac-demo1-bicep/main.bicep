@@ -10,7 +10,6 @@ var kindOfRandom = substring(uniqueString(resourceGroup().id), 0, 4)
 var appServicePlanName = '${baseName}-${environment}-plan'
 var webAppName = '${baseName}-${environment}-${kindOfRandom}-webapp'
 
-
 // App Service Plan
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServicePlanName
@@ -20,6 +19,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   }
   sku: {
     name: sku
+    capacity: 1
   }
   kind: 'linux'
 }
