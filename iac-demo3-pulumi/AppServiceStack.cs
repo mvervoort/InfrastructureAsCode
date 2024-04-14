@@ -44,6 +44,7 @@ class AppServiceStack : Stack
             {
                 Tier = "Basic",
                 Name = sku,
+                Capacity = 1
             },
         });
 

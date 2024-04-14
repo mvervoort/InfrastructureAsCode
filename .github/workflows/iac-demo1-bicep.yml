@@ -3,13 +3,15 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: Choose the environment to deploy to
+        description: Environment
         required: true
         default: 'test'
 
 jobs:
   deploy-to-azure:
     runs-on: ubuntu-latest
+    env:
+      ResourceGroupName: "iac-demo1-bicep-${{ github.event.inputs.environment }}-rg"
     steps:
 
     - name: Checkout code
@@ -20,18 +22,24 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure CLI Action
+    - name: Create Resource Group
       uses: Azure/cli@v2.0.0
       with:
         inlineScript: |
+          #!/bin/bash
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
-          az group create --name "iac-demo1-bicep-${{ github.event.inputs.environment }}-rg" --location westeurope
+          az group create --name "${{ env.ResourceGroupName }}" --location westeurope
               
     - name: Deploy Bicep file
       uses: azure/arm-deploy@v1
+      id: deploy_bicep
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: "ac-demo1-bicep-${{ github.event.inputs.environment }}-rg"
+        resourceGroupName: "${{ env.ResourceGroupName }}"
         template: ./iac-demo1-bicep/main.bicep
-        parameters: ./iac-demo1-bicep/parameters.test.bicepparam
+        parameters: ./iac-demo1-bicep/parameters.${{ github.event.inputs.environment }}.bicepparam
         failOnStdErr: false
+
+    - run: |
+        echo "Web App URL: https://${{ steps.deploy_bicep.outputs.webAppUrl }}"
+      name: Show Bicep output
