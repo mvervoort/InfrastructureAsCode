@@ -37,7 +37,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: "${{ env.ResourceGroupName }}"
         template: ./iac-demo1-bicep/main.bicep
-        parameters: ./iac-demo1-bicep/parameters.test.bicepparam
+        parameters: ./iac-demo1-bicep/parameters.${{ github.event.inputs.environment }}.bicepparam
         failOnStdErr: false
 
     - run: |
