@@ -31,6 +31,9 @@ class AppServiceStack : Stack
         var resourceGroup = new ResourceGroup("rg", new ResourceGroupArgs
         {
             ResourceGroupName = $"{baseNameWithEnvironment}-rg",
+            Tags = {
+                { "environment", stack },
+            },
         });
 
         // Create an App Service Plan

@@ -12,7 +12,7 @@ terraform init
 
 #!markdown
 
-**Plan (what-if)**
+**Plan**
 
 #!pwsh
 

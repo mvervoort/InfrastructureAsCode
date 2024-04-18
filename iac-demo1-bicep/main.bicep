@@ -11,7 +11,7 @@ var appServicePlanName = '${baseName}-${environment}-plan'
 var webAppName = '${baseName}-${environment}-${kindOfRandom}-webapp'
 
 // App Service Plan
-resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
+resource myAppServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServicePlanName
   location: location
   properties: {
@@ -25,16 +25,18 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
 }
 
 // Web App
-resource appService 'Microsoft.Web/sites@2020-06-01' = {
+resource myAppService 'Microsoft.Web/sites@2022-09-01' = {
   name: webAppName
   location: location
+  tags: {
+    environment: environment
+  }
   properties: {
-    serverFarmId: appServicePlan.id
+    serverFarmId: myAppServicePlan.id
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|${dotnet_version}'
     }
   }
 }
 
-
-output webAppUrl string = appService.properties.defaultHostName
+output webAppUrl string = myAppService.properties.defaultHostName

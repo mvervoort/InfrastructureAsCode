@@ -14,7 +14,7 @@ pulumi stack
 
 #!markdown
 
-**Plan (what-if)**
+**Plan (preview)**
 
 #!pwsh
 

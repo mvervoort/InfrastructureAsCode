@@ -1,6 +1,6 @@
 # Input Variables
 variable "environment" {
-  type    = string
+  type = string
 }
 
 variable "baseName" {
@@ -31,6 +31,9 @@ locals {
 resource "azurerm_resource_group" "this" {
   name     = local.resource_group_name
   location = var.location
+  tags = {
+    environment = var.environment
+  }
 }
 
 
@@ -60,7 +63,11 @@ resource "azurerm_linux_web_app" "webapp" {
   site_config {
     always_on = false
     application_stack {
-      dotnet_version = "8.0"
+      dotnet_version = var.dotnet_version
     }
   }
+}
+
+output "webapp_url" {
+  value = azurerm_linux_web_app.webapp.default_hostname
 }
