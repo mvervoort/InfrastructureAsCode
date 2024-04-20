@@ -18,6 +18,10 @@ All the demo's will show the basic concept of IaC including:
 - DTAP environments (dev, test, acceptance, production)
 - Return output parameter (URL of App Service)
 
+## Solution design
+
+![Solutution design](docs/solution-design.drawio.png)
+
 ## PowerShell Notebook (optional)
 
 Many of the demo's using a PowerShell Notebook for easy demonstration.
